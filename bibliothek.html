@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de" data-title-en="Library: original art to rent | artqrt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bibliothek: originale Kunst zum Mieten | artqrt</title>
+<meta name="description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief zu Größe, Stil und Material.">
+<link rel="canonical" href="https://www.artqrt.de/bibliothek.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="artqrt">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.artqrt.de/bibliothek.html">
+<meta property="og:title" content="Bibliothek: originale Kunst zum Mieten | artqrt">
+<meta property="og:description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief zu Größe, Stil und Material.">
+<meta property="og:image" content="https://www.artqrt.de/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="artqrt: originale Kunst im Abo für Unternehmen">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.artqrt.de/#org", "name": "artqrt", "legalName": "mediarenner GbR", "description": "artqrt vermietet originale Kunst im Abo an Unternehmen. Die Werke wechseln alle 6 Monate, Versand und Versicherung sind im Preis enthalten.", "url": "https://www.artqrt.de/", "logo": "https://www.artqrt.de/assets/logo.svg", "email": "info@artqrt.de", "telephone": "+49 176 47305606", "vatID": "DE364329565", "address": {"@type": "PostalAddress", "streetAddress": "Liskircherstraße 17", "postalCode": "93049", "addressLocality": "Regensburg", "addressCountry": "DE"}, "slogan": "Art that changes with your space.", "sameAs": ["https://www.instagram.com/artqrt.official/"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "artqrt", "item": "https://www.artqrt.de/"}, {"@type": "ListItem", "position": 2, "name": "Bibliothek", "item": "https://www.artqrt.de/bibliothek.html"}]}]}</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="index.html" class="brand" aria-label="artqrt Startseite" data-en-label="artqrt home"><img class="logo" src="assets/logo.svg" alt="artqrt" width="113" height="26"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation" data-en-label="Main navigation">
+      <a href="index.html#anmelden" data-en="For artists">Für Künstler</a>
+      <a href="bibliothek.html" data-en="Works">Werke</a>
+      <a href="index.html#unternehmen" data-en="For companies">Für Unternehmen</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="lang" id="lang" type="button">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="kicker" data-en="Library">Bibliothek</p>
+      <h1 data-en="Artists and their works.">Künstler und ihre Werke.</h1>
+      <p class="lead" data-en="Every work is an original and has a fact sheet with size, style and material.">Jedes Werk ist ein Original und hat einen Steckbrief mit Größe, Stil und Material.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0" aria-live="polite">
+    <div class="wrap">
+      <div class="lib" id="lib"></div>
+      <div class="empty" id="empty" hidden>
+        <h2 data-en="The first works are coming soon.">Die ersten Werke kommen bald.</h2>
+        <p data-en="We are looking through the first pre-registrations. As soon as artists are approved, their works appear here.">Wir sichten gerade die ersten Vorab-Anmeldungen. Sobald Künstlerinnen und Künstler freigegeben sind, erscheinen ihre Werke hier.</p>
+        <a class="btn" href="index.html#anmelden" data-en="Pre-register as an artist">Als Künstler vorab anmelden</a>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div>
+      <img class="logo" src="assets/logo-dark.svg" alt="artqrt" width="105" height="24">
+      <div class="claim">Original art. New perspectives.</div>
+      <div class="about" data-en="artqrt rents original art by subscription to companies.">artqrt vermietet originale Kunst im Abo an Unternehmen.</div>
+      <div class="legalname">© <span id="yr"></span> artqrt · <span data-en="a service of mediarenner GbR">ein Angebot der mediarenner GbR</span></div>
+    </div>
+    <nav aria-label="Rechtliches und Kanäle" data-en-label="Legal and channels">
+      <a href="https://www.instagram.com/artqrt.official/" target="_blank" rel="noopener">Instagram</a>
+      <a href="impressum.html" data-en="Legal notice">Impressum</a>
+      <a href="datenschutz.html" data-en="Privacy">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+<script>
+/* Liest die Bibliothek über die Edge Function "library": nur freigegebene Werke freigegebener Künstler,
+   mit Bild-Links, die eine Stunde gültig sind. Ohne Backend (Demo-Modus) bleibt die Bibliothek leer. */
+const A = window.ARTQRT, T = A.T, C = A.CONFIG, esc = A.esc;
+async function loadWorks() {
+  if (!C.backend.url) return [];
+  const r = await fetch(`${C.backend.url}/functions/v1/library`,
+    { headers: { apikey: C.backend.anonKey, Authorization: `Bearer ${C.backend.anonKey}` } });
+  if (!r.ok) throw new Error(`status ${r.status}`);
+  return r.json();
+}
+function card(w) {
+  const rows = [[T("Größe", "Size"), `${esc(w.width_cm)} × ${esc(w.height_cm)} cm`], [T("Stil", "Style"), esc(w.style)], [T("Material", "Material"), esc(w.material)], [T("Jahr", "Year"), esc(w.year)]];
+  return `<article class="lib-card">
+    <div class="pic"><img src="${esc(w.image_url)}" alt="${esc(w.title)}" loading="lazy"></div>
+    <div class="brief"><div class="brief-head"><span class="t">${esc(w.title)}</span><span class="tag">Original</span></div><div class="a">${esc(w.artist)}</div>
+      <dl>${rows.filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></div>
+  </article>`;
+}
+loadWorks().catch(() => []).then(list => {
+  if (!list.length) { document.getElementById("empty").hidden = false; return; }
+  document.getElementById("lib").innerHTML = list.map(card).join("");
+});
+</script>
+</body>
+</html>
