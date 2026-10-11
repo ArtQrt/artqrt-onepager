@@ -96,6 +96,16 @@
     }
     const nav = document.getElementById("nav");
     if (nav) { const onScroll = () => nav.classList.toggle("is-solid", scrollY > 24); onScroll(); addEventListener("scroll", onScroll, { passive: true }); }
+    /* Handy: Navigation hinter einem Menü-Knopf, damit die Kopfzeile einzeilig bleibt */
+    const links = document.querySelector(".nav-links"), tools = document.querySelector(".nav-tools");
+    if (nav && links && tools) {
+      const mb = document.createElement("button");
+      mb.className = "menu-btn"; mb.type = "button"; mb.innerHTML = "<span></span><span></span>";
+      mb.setAttribute("aria-label", T("Menü", "Menu")); mb.setAttribute("aria-expanded", "false");
+      tools.appendChild(mb);
+      mb.addEventListener("click", () => mb.setAttribute("aria-expanded", nav.classList.toggle("is-open")));
+      links.addEventListener("click", () => { nav.classList.remove("is-open"); mb.setAttribute("aria-expanded", "false"); });
+    }
     const page = location.pathname.split("/").pop() || "index.html";
     document.querySelectorAll(".nav-links a").forEach(a => { if (a.getAttribute("href") === page) a.setAttribute("aria-current", "page"); });
     const yr = document.getElementById("yr"); if (yr) yr.textContent = new Date().getFullYear();
