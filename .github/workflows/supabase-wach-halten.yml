@@ -1,0 +1,29 @@
+# Supabase pausiert kostenlose Projekte, wenn eine Woche lang kaum Datenbank-Abfragen kommen.
+# Dieser Job ruft dreimal täglich die Bibliothek ab (liest aus der Datenbank) und hält das Projekt so wach.
+# Der Schlüssel unten ist der öffentliche anon-Schlüssel, derselbe wie in assets/site.js.
+name: Supabase wach halten
+
+on:
+  schedule:
+    - cron: "17 5,13,21 * * *"
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/supabase-wach-halten.yml
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Bibliothek abrufen
+        env:
+          ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4eXNiYWxwenZienFhY2FubG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NTE4NDcsImV4cCI6MjEwNzIyNzg0N30.hkNlT6p-uU4sYy--30HqSMkF4TtcLH0uC8NTsPiZ9AI
+        run: |
+          code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 \
+            -H "apikey: $ANON_KEY" -H "Authorization: Bearer $ANON_KEY" \
+            https://pxysbalpzvbzqacanlmb.supabase.co/functions/v1/library)
+          echo "Antwort: $code"
+          test "$code" = "200"
