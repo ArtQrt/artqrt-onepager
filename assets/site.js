@@ -6,7 +6,7 @@
   if (lang === "en") document.documentElement.classList.add("i18n-pending");
 
   /* Zentrale Config: alle veraenderbaren Werte hier.
-     Paketpreise und Laufzeiten stehen zusaetzlich fest im HTML und im JSON-LD von unternehmen.html sowie in index.html (data-from), bei Aenderungen dort mitziehen. */
+     Paketpreise, Preisstufen und Laufzeiten stehen zusaetzlich fest im HTML und im JSON-LD von unternehmen.html sowie in index.html (data-from), bei Aenderungen dort mitziehen. */
   const CONFIG = {
     brand: "artqrt",
     email: "info@artqrt.de",
@@ -15,11 +15,17 @@
       anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB4eXNiYWxwenZienFhY2FubG1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE2NTE4NDcsImV4cCI6MjEwNzIyNzg0N30.hkNlT6p-uU4sYy--30HqSMkF4TtcLH0uC8NTsPiZ9AI"   // öffentlicher Schlüssel, darf im Code stehen
     },
     vat: 19,                                     // MwSt. in %
-    packages: [
-      { id: "essential", name: "Essential", net: 349, works: 3, premium: "no", curation: false },
-      { id: "studio", name: "Studio", net: 579, works: 5, premium: "optional", curation: false },
-      { id: "signature", name: "Signature", net: 990, works: 8, premium: "yes", curation: true }
+    packages: [                                  // service = Servicepauschale netto/Monat (Platzhalter)
+      { id: "essential", name: "Essential", service: 149, works: 3, curation: false },
+      { id: "studio", name: "Studio", service: 199, works: 5, curation: false },
+      { id: "signature", name: "Signature", service: 299, works: 8, curation: true }
     ],
+    tiers: [                                     // Werkmiete netto/Monat nach Verkaufspreis (Platzhalter), darueber Einzelpreis
+      { id: "A", upTo: 2500, rent: 75 },
+      { id: "B", upTo: 5000, rent: 150 },
+      { id: "C", upTo: 10000, rent: 250 }
+    ],
+    artistShare: 50,                             // Kuenstleranteil in % der Werkmiete (entschieden)
     swapMonths: 6,                               // Werkwechsel, fuer alle Pakete gleich
     minTermMonths: 3, renewMonths: 3, noticeWeeks: 4,
     freightSurcharge: 35                         // Platzhalter: Zuschlag pro Speditions-Werk und Monat, netto
@@ -28,6 +34,7 @@
   const T = (de, en) => (lang === "en" ? en : de);
   const money = n => new Intl.NumberFormat(lang === "en" ? "en-GB" : "de-DE",
     { style: "currency", currency: "EUR", minimumFractionDigits: n % 1 ? 2 : 0, maximumFractionDigits: 2 }).format(n);
+  const fromPrice = p => p.service + p.works * CONFIG.tiers[0].rent;   // Einstiegspreis eines Pakets (alle Werke Stufe A)
   const gross = n => Math.round(n * (100 + CONFIG.vat)) / 100;
   const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
@@ -69,7 +76,7 @@
     }
   };
 
-  window.ARTQRT = { lang, T, CONFIG, money, gross, esc, layoutRoom, auth };
+  window.ARTQRT = { lang, T, CONFIG, money, gross, fromPrice, esc, layoutRoom, auth };
 
   document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;

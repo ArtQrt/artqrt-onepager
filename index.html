@@ -203,7 +203,7 @@
     <div class="wrap grid12 guide">
       <h2 id="guideh" data-en="Rent out your art instead of storing it">Kunst vermieten statt lagern</h2>
       <div class="guide-list">
-        <article><h3 data-en="Monthly income from your originals">Laufende Einnahmen mit deinen Originalen</h3><p data-en="A work in the studio earns you nothing. When it hangs in a company through artqrt, you get a share for every month of the subscription.">Ein Werk im Atelier bringt dir nichts ein. Hängt es über artqrt in einem Unternehmen, bekommst du für jeden Abo-Monat einen Anteil.</p></article>
+        <article><h3 data-en="Monthly income from your originals">Laufende Einnahmen mit deinen Originalen</h3><p data-en="A work in the studio earns you nothing. When it hangs in a company through artqrt, you get half of the rent every month.">Ein Werk im Atelier bringt dir nichts ein. Hängt es über artqrt in einem Unternehmen, bekommst du jeden Monat die Hälfte der Miete.</p></article>
         <article><h3 data-en="You keep ownership">Du behältst das Eigentum</h3><p data-en="You only rent out your work. It stays yours and comes back to you afterwards. You can keep selling through galleries, fairs or your own channels as before.">Du vermietest dein Werk nur. Es gehört weiter dir und kommt danach zu dir zurück. Über Galerien, Messen oder eigene Kanäle kannst du nebenher verkaufen wie bisher.</p></article>
         <article><h3 data-en="Seen in real rooms">Sichtbar in echten Räumen</h3><p data-en="Your art hangs in a reception, a meeting room or a lounge. People see it there who rarely go to a gallery. If a company wants to buy the work, you set the price.">Deine Kunst hängt im Empfang, im Meetingraum oder in der Lounge. Dort sehen sie Menschen, die selten in eine Galerie gehen. Will ein Unternehmen das Werk kaufen, bestimmst du den Preis.</p></article>
         <article><h3 data-en="You only pay for the packaging">Du zahlst nur die Verpackung</h3><p data-en="You pack the work safely for transport. artqrt books and pays for the insured shipping to the company and back to you.">Du verpackst das Werk transportsicher. Den versicherten Versand zum Unternehmen und zurück zu dir bucht und bezahlt artqrt.</p></article>
@@ -277,7 +277,6 @@
 /* Zentrale Config: alle veränderbaren Werte hier */
 const CONFIG = {
   brand: "artqrt",
-  share: { standard: 30, premium: 40 },       // Künstleranteil in % der Abo-Einnahmen (entschieden)
   minAvailabilityMonths: 6,                   // Mindestverfügbarkeit pro Werk (entschieden)
   maxWorks: 4, minWorks: 1, maxMB: 15,
   maxDesc: 300, maxImagePx: 2400,             // Kurzbeschreibung pro Werk; längste Bildkante beim Upload
@@ -293,7 +292,12 @@ const ROOMS = ["Empfang","Meetingraum","Büro","Lounge"];
 const MAX_WORKS = CONFIG.maxWorks, MAX_MB = CONFIG.maxMB, DRAFT_KEY = "artqrt-artist-draft-v1";
 
 document.querySelectorAll("[data-brand]").forEach(e=>e.textContent=BRAND.name);
-document.getElementById("faqPay").textContent = T(`Du erhältst ${CONFIG.share.standard} % der Abo-Einnahmen für dein Werk, bei Premium-Werken ${CONFIG.share.premium} %. Ausgezahlt wird monatlich. Möchte ein Unternehmen ein Werk kaufen, legst du den Verkaufspreis fest.`,`You receive ${CONFIG.share.standard}% of the subscription revenue for your work, ${CONFIG.share.premium}% for premium works. Payouts are monthly. If a company wants to buy a work, you set the sale price.`);
+{ const G = window.ARTQRT, sh = G.CONFIG.artistShare, tiers = G.CONFIG.tiers;
+  const lim = n => new Intl.NumberFormat(G.lang === "en" ? "en-GB" : "de-DE").format(n) + " €";
+  const list = (f, and) => { const x = tiers.map(f); return x.slice(0, -1).join(", ") + and + x[x.length - 1]; };
+  const de = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "bei einem Verkaufspreis "}bis ${lim(t.upTo)}`, " und ");
+  const en = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "for a sale price "}up to ${lim(t.upTo)}`, " and ");
+  document.getElementById("faqPay").textContent = T(`Du erhältst ${sh} % der Miete für dein Werk, jeden Monat. Wie hoch die Miete ist, hängt vom Verkaufspreis ab, den du festlegst. Pro Werk und Monat sind das ${de}. Bei teureren Werken vereinbaren wir den Betrag einzeln. Möchte ein Unternehmen ein Werk kaufen, gilt dein Verkaufspreis.`,`You receive ${sh}% of the rent for your work, every month. The rent depends on the sale price you set. Per work and month that is ${en}. For more expensive works we agree the amount individually. If a company wants to buy a work, your sale price applies.`); }
 if (SUBMIT.endpoint) document.getElementById("modeNote").remove();
 
 
