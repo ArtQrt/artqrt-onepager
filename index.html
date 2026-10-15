@@ -531,12 +531,12 @@ async function submitApplication(fd){
   if(!SUBMIT.endpoint){ await new Promise(r=>setTimeout(r,1100)); return {ok:true, demo:true}; }
   const key=window.ARTQRT.CONFIG.backend.anonKey;
   const res=await fetch(SUBMIT.endpoint,{method:"POST",headers:{apikey:key,Authorization:`Bearer ${key}`},body:fd});
-  if(!res.ok) throw new Error(`status ${res.status}`);
+  if(!res.ok){ let b={}; try{b=await res.json()}catch(_){} const e=new Error(`status ${res.status}`); e.status=res.status; e.code=b.error; e.index=b.index; throw e; }
   return {ok:true};
 }
 const btn=document.getElementById("submit"), formError=document.getElementById("formError");
 form.addEventListener("submit",async e=>{
-  e.preventDefault(); formError.textContent="";
+  e.preventDefault(); formError.textContent=""; formError.style.color="";
   const first=validate();
   if(first){formError.textContent=T("Einige Angaben fehlen noch. Die markierten Felder zeigen, was zu tun ist.","Some details are still missing. The marked fields show what to do."); first.scrollIntoView({behavior:"smooth",block:"center"}); const f=first.querySelector("input,select,textarea"); if(f)setTimeout(()=>f.focus({preventScroll:true}),400); return}
   btn.disabled=true; btn.textContent=T("Wird gesendet","Sending");
@@ -548,7 +548,16 @@ form.addEventListener("submit",async e=>{
     document.getElementById("formWrap").classList.add("done");
     const s=document.getElementById("success"); s.scrollIntoView({behavior:"smooth",block:"start"}); s.focus({preventScroll:true});
   }catch(err){
-    formError.textContent=T("Die Vorab-Anmeldung konnte nicht gesendet werden. Prüfe deine Verbindung und sende sie erneut. Deine Angaben bleiben erhalten.","The pre-registration couldn't be sent. Check your connection and send it again. Your details are kept.");
+    if(err.status===429||err.code==="too_many"){
+      formError.style.color="var(--ink)";
+      formError.innerHTML=T('Deine Vorab-Anmeldung ist schon bei uns angekommen. Du musst sie nicht noch einmal senden. Möchtest du weitere Werke ergänzen? Schick sie einfach per E-Mail an <a href="mailto:info@artqrt.de">info@artqrt.de</a>.','Your pre-registration has already reached us. You don\'t need to send it again. Want to add more works? Just email them to <a href="mailto:info@artqrt.de">info@artqrt.de</a>.');
+    }else if(err.code==="work"&&works[err.index]){
+      const w=works[err.index], n=err.index+1, t=w.title.trim()?T(` („${w.title.trim()}“)`,` ("${w.title.trim()}")`):"";
+      formError.textContent=T(`Werk ${n}${t} konnte nicht angenommen werden. Prüfe Titel, Breite und Höhe (5 bis 600 cm) und ob das Bild ein JPG, PNG oder WebP ist.`,`Work ${n}${t} couldn't be accepted. Check the title, width and height (5 to 600 cm) and that the image is a JPG, PNG or WebP.`);
+      const el=worksEl.querySelector(`.work[data-id="${w.id}"]`); if(el)el.scrollIntoView({behavior:"smooth",block:"center"});
+    }else{
+      formError.textContent=T("Die Vorab-Anmeldung konnte nicht gesendet werden. Prüfe deine Verbindung und sende sie erneut. Deine Angaben bleiben erhalten.","The pre-registration couldn't be sent. Check your connection and send it again. Your details are kept.");
+    }
   }finally{ btn.disabled=false; btn.textContent=T("Vorab-Anmeldung senden","Send pre-registration"); }
 });
 document.getElementById("again").onclick=()=>{
