@@ -185,7 +185,6 @@
         <div class="submit-row">
           <div>
             <p class="form-error" id="formError" role="alert"></p>
-            <span class="demo-note" id="modeNote" data-en="Demo mode: pre-registrations are not transmitted yet">Demo-Modus: Vorab-Anmeldungen werden noch nicht übertragen</span>
           </div>
           <button class="btn" type="submit" id="submit" data-en="Send pre-registration">Vorab-Anmeldung senden</button>
         </div>
@@ -298,7 +297,6 @@ document.querySelectorAll("[data-brand]").forEach(e=>e.textContent=BRAND.name);
   const de = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "bei einem Verkaufspreis "}bis ${lim(t.upTo)}`, " und ");
   const en = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "for a sale price "}up to ${lim(t.upTo)}`, " and ");
   document.getElementById("faqPay").textContent = T(`Du erhältst ${sh} % der Miete für dein Werk, jeden Monat. Wie hoch die Miete ist, hängt vom Verkaufspreis ab, den du festlegst. Pro Werk und Monat sind das ${de}. Bei teureren Werken vereinbaren wir den Betrag einzeln. Möchte ein Unternehmen ein Werk kaufen, gilt dein Verkaufspreis.`,`You receive ${sh}% of the rent for your work, every month. The rent depends on the sale price you set. Per work and month that is ${en}. For more expensive works we agree the amount individually. If a company wants to buy a work, your sale price applies.`); }
-if (SUBMIT.endpoint) document.getElementById("modeNote").remove();
 
 
 /* ===== Styles chips ===== */
