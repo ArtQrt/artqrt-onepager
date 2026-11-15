@@ -27,8 +27,11 @@
     ],
     artistShare: 50,                             // Kuenstleranteil in % der Werkmiete (entschieden)
     swapMonths: 6,                               // Werkwechsel, fuer alle Pakete gleich
-    minTermMonths: 3, renewMonths: 3, noticeWeeks: 4,
-    freightSurcharge: 35                         // Platzhalter: Zuschlag pro Speditions-Werk und Monat, netto
+    minTermMonths: 12, renewMonths: 6, noticeWeeks: 4,
+    freightSurcharge: 35,                        // Platzhalter: Zuschlag pro Speditions-Werk und Monat, netto
+    /* Schalter fuer den Start (siehe GO-LIVE.md) */
+    insuranceConfirmed: false,                   // true, sobald die Nagel-zu-Nagel-Police abgeschlossen ist: dann steht ueberall "Versicherung inklusive"
+    showLogin: false                             // true, sobald Konto und Login fuer Kuenstler und Unternehmen fertig sind
   };
 
   const T = (de, en) => (lang === "en" ? en : de);
@@ -76,10 +79,30 @@
     }
   };
 
-  window.ARTQRT = { lang, T, CONFIG, money, gross, fromPrice, esc, layoutRoom, auth };
+  /* Herkunft eines Besuchs: ?ref=... aus dem Link (z. B. ?ref=kunstaspekte), sonst die verweisende Website als "via:domain".
+     Im Browser wird nichts gespeichert; die Kennung wird nur an interne Links angehaengt und geht mit einer Anmeldung oder Anfrage mit. */
+  const quelle = (() => {
+    const ok = v => /^(via:)?[a-z0-9._-]{1,56}$/.test(v);
+    let q = "";
+    try { const p = new URLSearchParams(location.search); q = (p.get("ref") || p.get("utm_source") || "").trim().toLowerCase(); } catch (e) {}
+    if (!ok(q)) {
+      q = "";
+      try { const h = document.referrer ? new URL(document.referrer).hostname.replace(/^www\./, "") : ""; if (h && !/(^|\.)artqrt\.(de|com)$/.test(h)) q = "via:" + h; } catch (e) {}
+    }
+    return ok(q) ? q : "";
+  })();
+
+  /* Versicherung: Elemente mit data-ins tragen den Text fuer "Police abgeschlossen".
+     Solange insuranceConfirmed false ist, bleibt der vorsichtige Text im HTML stehen. */
+  const insText = (pending, confirmed) => (CONFIG.insuranceConfirmed ? confirmed : pending);
+
+  window.ARTQRT = { lang, T, CONFIG, money, gross, fromPrice, esc, layoutRoom, auth, quelle, insText };
 
   document.addEventListener("DOMContentLoaded", () => {
     const root = document.documentElement;
+    if (CONFIG.insuranceConfirmed) {
+      document.querySelectorAll("[data-ins]").forEach(el => { el.innerHTML = el.dataset.ins; if (el.dataset.insEn) el.dataset.en = el.dataset.insEn; });
+    }
     if (lang === "en") {
       root.lang = "en";
       if (root.dataset.titleEn) document.title = root.dataset.titleEn;
@@ -90,7 +113,18 @@
     root.classList.remove("i18n-pending");
 
     const login = document.querySelector('.nav-tools a[href="login.html"]');
-    if (login && auth.get()) { login.href = "konto.html"; login.textContent = T("Konto", "Account"); }
+    if (login && !CONFIG.showLogin) login.remove();
+    else if (login && auth.get()) { login.href = "konto.html"; login.textContent = T("Konto", "Account"); }
+
+    /* ?ref= an interne Links weitergeben, damit die Herkunft auch nach einem Seitenwechsel bei der Anmeldung ankommt */
+    if (quelle) {
+      document.querySelectorAll('a[href]').forEach(a => {
+        const h = a.getAttribute("href");
+        if (!/^[a-z-]+\.html(#.*)?$/.test(h) || /^(impressum|datenschutz)\.html/.test(h)) return;
+        const [path, hash] = h.split("#");
+        a.setAttribute("href", `${path}?ref=${encodeURIComponent(quelle)}${hash ? "#" + hash : ""}`);
+      });
+    }
 
     const btn = document.getElementById("lang");
     if (btn) {

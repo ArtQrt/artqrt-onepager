@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="de" data-title-en="Login – artqrt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login – artqrt</title>
+<meta name="description" content="Login und Registrierung für Künstler und Unternehmen bei artqrt.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="index.html" class="brand" aria-label="artqrt Startseite" data-en-label="artqrt home"><img class="logo" src="assets/logo.svg" alt="artqrt" width="113" height="26"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation" data-en-label="Main navigation">
+      <a href="unternehmen.html" data-en="For companies">Für Unternehmen</a>
+      <a href="kuenstler.html" data-en="For artists">Für Künstler</a>
+      <a href="bibliothek.html" data-en="Library">Bibliothek</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="lang" id="lang" type="button">EN</button>
+      <a href="login.html" class="btn btn-quiet">Login</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="page-head" style="padding-bottom:32px">
+    <div class="wrap">
+      <p class="kicker">Login</p>
+      <h1 id="authH" data-en="Log in">Anmelden</h1>
+    </div>
+  </section>
+  <section class="section band" style="padding-top:clamp(40px,6vw,72px)">
+    <div class="wrap">
+      <div class="auth">
+        <div class="tabs" id="tabs" role="tablist" aria-label="Konto-Art" data-en-label="Account type">
+          <button class="tab" role="tab" type="button" data-role="artist" aria-selected="true" data-en="Artist">Künstler</button>
+          <button class="tab" role="tab" type="button" data-role="company" aria-selected="false" data-en="Company">Unternehmen</button>
+        </div>
+        <form id="auth" novalidate>
+          <div class="field" id="nameField" hidden><label for="aName" id="aNameLabel"></label><input id="aName" type="text" autocomplete="name"></div>
+          <div class="field" id="emailField"><label for="aEmail" data-en="Email">E-Mail</label><input id="aEmail" type="email" autocomplete="email" inputmode="email" required></div>
+          <div class="field" id="passField"><label for="aPass" id="aPassLabel"></label><input id="aPass" type="password" autocomplete="current-password" minlength="8" required><div class="hint" id="passHint" hidden data-en="At least 8 characters">Mindestens 8 Zeichen</div></div>
+          <label class="check" id="consent" hidden><input type="checkbox" id="aPrivacy"><span data-en="I have read the &lt;a href=&quot;datenschutz.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;privacy notice&lt;/a&gt;.">Ich habe die <a href="datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> gelesen.</span></label>
+          <p class="auth-msg" id="authMsg" role="alert"></p>
+          <button class="btn" type="submit" id="authBtn"></button>
+          <p class="switch" id="forgotRow"><button type="button" id="forgotBtn" data-en="Forgot your password?">Passwort vergessen?</button></p>
+          <p class="switch" id="switchRow"><span id="switchText"></span> <button type="button" id="switchBtn"></button></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div>
+      <img class="logo" src="assets/logo-dark.svg" alt="artqrt" width="105" height="24">
+      <div class="claim">Original art. New perspectives.</div>
+      <div class="about" data-en="artqrt rents original art by subscription to companies.">artqrt vermietet originale Kunst im Abo an Unternehmen.</div>
+      <div class="legalname">© <span id="yr"></span> artqrt · <span data-en="a service of mediarenner GbR">ein Angebot der mediarenner GbR</span></div>
+    </div>
+    <nav aria-label="Rechtliches und Kanäle" data-en-label="Legal and channels">
+      <a href="https://www.instagram.com/artqrt.official/" target="_blank" rel="noopener">Instagram</a>
+      <a href="impressum.html" data-en="Legal notice">Impressum</a>
+      <a href="datenschutz.html" data-en="Privacy">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+<script>
+/* Login, Registrierung und Passwort-Reset über Supabase Auth. Nach dem Anmelden geht es zu konto.html. */
+const A = window.ARTQRT, T = A.T, B = A.CONFIG.backend, auth = A.auth;
+const HERE = location.origin + location.pathname;      // Ziel der Links in den Bestätigungs- und Reset-Mails
+let role = "artist", mode = "login";
+const $ = id => document.getElementById(id), msg = $("authMsg");
+
+function render() {
+  const reg = mode === "register", forgot = mode === "forgot", np = mode === "newpass";
+  $("authH").textContent = np ? T("Neues Passwort setzen", "Set a new password") : forgot ? T("Passwort zurücksetzen", "Reset password") : reg ? T("Registrieren", "Register") : T("Anmelden", "Log in");
+  $("authBtn").textContent = np ? T("Passwort speichern", "Save password") : forgot ? T("Link zum Zurücksetzen senden", "Send reset link") : reg ? T("Konto anlegen", "Create account") : T("Anmelden", "Log in");
+  $("tabs").hidden = forgot || np;
+  $("nameField").hidden = !reg; $("emailField").hidden = np; $("passField").hidden = forgot;
+  $("passHint").hidden = !(reg || np); $("consent").hidden = !reg;
+  $("forgotRow").hidden = mode !== "login"; $("switchRow").hidden = np;
+  $("aNameLabel").textContent = role === "artist" ? T("Name", "Name") : T("Unternehmen", "Company");
+  $("aPassLabel").textContent = np ? T("Neues Passwort", "New password") : T("Passwort", "Password");
+  $("aName").autocomplete = role === "artist" ? "name" : "organization";
+  $("aPass").autocomplete = reg || np ? "new-password" : "current-password";
+  $("switchText").textContent = forgot ? "" : reg ? T("Schon ein Konto?", "Already have an account?") : T("Noch kein Konto?", "No account yet?");
+  $("switchBtn").textContent = forgot ? T("Zurück zur Anmeldung", "Back to log in") : reg ? T("Anmelden", "Log in") : T("Registrieren", "Register");
+  document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.role === role)));
+}
+const say = (t, err) => { msg.textContent = t; msg.classList.toggle("is-err", !!err); };
+const go = m => { mode = m; say(""); render(); };
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => { role = t.dataset.role; render(); }));
+$("switchBtn").addEventListener("click", () => go(mode === "login" ? "register" : "login"));
+$("forgotBtn").addEventListener("click", () => go("forgot"));
+
+/* Rückkehr aus einer E-Mail: Supabase hängt die Sitzung an die Adresse an */
+const hash = new URLSearchParams(location.hash.slice(1));
+if (hash.get("access_token")) {
+  auth.save({ access_token: hash.get("access_token"), refresh_token: hash.get("refresh_token"), expires_in: hash.get("expires_in") });
+  history.replaceState(null, "", HERE);
+  if (hash.get("type") === "recovery") mode = "newpass"; else location.replace("konto.html");
+} else if (auth.get()) {
+  location.replace("konto.html");
+}
+if (new URLSearchParams(location.search).get("rolle") === "unternehmen") role = "company";
+addEventListener("DOMContentLoaded", () => {
+  render();
+  if (hash.get("error_description")) say(T("Der Link ist abgelaufen oder wurde schon benutzt. Fordere bitte einen neuen an.", "The link has expired or was already used. Please request a new one."), true);
+});
+
+const call = (path, method, body, token) => fetch(B.url + path, { method,
+  headers: Object.assign({ apikey: B.anonKey, "Content-Type": "application/json" }, token ? { Authorization: `Bearer ${token}` } : {}), body: JSON.stringify(body) });
+
+$("auth").addEventListener("submit", async e => {
+  e.preventDefault(); say("");
+  const email = $("aEmail").value.trim(), password = $("aPass").value;
+  const needMail = mode !== "newpass", needPass = mode !== "forgot";
+  if (needMail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return say(T("Gib eine gültige E-Mail-Adresse ein.", "Enter a valid email address."), true);
+  if (needPass && password.length < 8) return say(T("Das Passwort braucht mindestens 8 Zeichen.", "The password needs at least 8 characters."), true);
+  if (mode === "register" && !$("aName").value.trim()) return say(role === "artist" ? T("Gib deinen Namen ein.", "Enter your name.") : T("Gib den Namen des Unternehmens ein.", "Enter the company name."), true);
+  if (mode === "register" && !$("aPrivacy").checked) return say(T("Bitte bestätige die Datenschutzhinweise.", "Please confirm the privacy notice."), true);
+  if (!B.url) return say(T("Der Login-Bereich wird gerade aufgebaut.", "The login area is being built."));
+
+  const btn = $("authBtn"); btn.disabled = true;
+  const redirect = "?redirect_to=" + encodeURIComponent(HERE);
+  try {
+    if (mode === "forgot") {
+      await call("/auth/v1/recover" + redirect, "POST", { email });
+      say(T("Wenn es ein Konto mit dieser Adresse gibt, ist die E-Mail mit dem Link unterwegs.", "If there is an account with this address, the email with the link is on its way."));
+    } else if (mode === "newpass") {
+      const r = await call("/auth/v1/user", "PUT", { password }, await auth.token());
+      if (!r.ok) throw new Error("newpass");
+      location.replace("konto.html");
+    } else if (mode === "register") {
+      const r = await call("/auth/v1/signup" + redirect, "POST", { email, password, data: { role, name: $("aName").value.trim() } });
+      if (!r.ok) throw new Error("register");
+      const d = await r.json();
+      if (d.access_token) { auth.save(d); location.replace("konto.html"); }
+      else say(T("Fast geschafft. Bitte bestätige die E-Mail, die wir dir geschickt haben.", "Almost done. Please confirm the email we sent you."));
+    } else {
+      const r = await call("/auth/v1/token?grant_type=password", "POST", { email, password });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error_code === "email_not_confirmed" ? "unconfirmed" : "login");
+      auth.save(d); location.replace("konto.html");
+    }
+  } catch (err) {
+    say({
+      unconfirmed: T("Bitte bestätige zuerst die E-Mail, die wir dir geschickt haben.", "Please confirm the email we sent you first."),
+      login: T("E-Mail oder Passwort stimmen nicht.", "Email or password is wrong."),
+      register: T("Die Registrierung hat nicht geklappt. Versuch es bitte noch einmal.", "Registration didn't work. Please try again."),
+      newpass: T("Das Passwort konnte nicht gespeichert werden. Fordere bitte einen neuen Link an.", "The password couldn't be saved. Please request a new link.")
+    }[err.message] || T("Das hat nicht geklappt. Prüfe deine Verbindung und versuch es noch einmal.", "That didn't work. Check your connection and try again."), true);
+  } finally { btn.disabled = false; }
+});
+</script>
+</body>
+</html>

@@ -105,7 +105,7 @@ fieldset:last-of-type{margin-bottom:0}
 @media (max-width:560px){.fs-body{grid-template-columns:1fr}}
 .field label,.field .lbl{display:block; font-size:.88rem; font-weight:500; margin-bottom:8px}
 .field .opt{font-weight:400; color:var(--stone)}
-input[type=text],input[type=email],input[type=url],input[type=number],input[type=month],select,textarea{width:100%; min-height:50px; padding:12px 14px; background:var(--field); border:1px solid var(--line); border-radius:1px; font-size:16px; transition:border-color .2s}
+input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],input[type=month],select,textarea{width:100%; min-height:50px; padding:12px 14px; background:var(--field); border:1px solid var(--line); border-radius:1px; font-size:16px; transition:border-color .2s}
 textarea{min-height:120px; resize:vertical; line-height:1.5}
 input:focus,select:focus,textarea:focus{outline:none; border-color:var(--ink)}
 .field.invalid input,.field.invalid textarea,.field.invalid select{border-color:var(--err)}
@@ -260,6 +260,11 @@ footer a{text-decoration:none; display:inline-flex; min-height:44px; align-items
 .calc-form{display:grid; grid-template-columns:1fr 1fr; gap:18px 16px; align-content:start}
 .calc-out{grid-column:1/-1; padding-top:18px; border-top:1px solid var(--line)}
 .calc-out strong{display:block; font-weight:400; font-size:clamp(1.8rem,2.8vw,2.4rem); letter-spacing:-.03em; line-height:1.1}
+.calc-out span{display:block; margin-top:4px}
+.tiers{width:100%; max-width:46ch; margin-top:20px; border-collapse:collapse; font-variant-numeric:tabular-nums}
+.tiers th,.tiers td{text-align:left; padding:10px 0; border-bottom:1px solid var(--line)}
+.tiers th{font-weight:400; color:var(--stone); font-size:.85rem}
+.tiers td:last-child,.tiers th:last-child{text-align:right}
 @media (max-width:820px){.calc{grid-template-columns:1fr}}
 @media (max-width:420px){.calc-form{grid-template-columns:1fr}}
 .split{display:grid; grid-template-columns:repeat(12,1fr); gap:0 24px; align-items:end}
@@ -402,3 +407,16 @@ footer .about{opacity:.75; margin-top:10px}
   .faq .faq-list{margin-top:24px}
   summary{padding:18px 40px 18px 0; font-size:1.05rem}
 }
+
+/* Bibliothek: Filter und Beschreibung */
+.lib-filter{display:flex; flex-wrap:wrap; gap:12px 20px; align-items:flex-end; margin-bottom:24px}
+.lib-filter label{display:grid; gap:4px; font-size:.84rem; color:var(--stone)}
+.lib-filter select{min-height:42px; padding:8px 12px; min-width:140px}
+.brief .desc{margin-top:10px; color:var(--ink)}
+.lib-card .fee{font-variant-numeric:tabular-nums}
+.lib-card > .link{align-self:flex-start; margin-top:-8px; font-size:.9rem}
+.brief .fee{margin-top:10px; padding-top:8px; border-top:1px solid var(--line)}
+
+/* Startseite: Hinweis für Künstler bei Links mit ?ref= */
+.ref-hint{padding-top:96px; margin-bottom:-72px}
+@media (max-width:760px){.ref-hint{padding-top:84px; margin-bottom:0}}

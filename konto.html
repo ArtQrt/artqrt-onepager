@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de" data-title-en="Account – artqrt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Konto – artqrt</title>
+<meta name="description" content="Dein Konto bei artqrt: Aufträge, Versand und Vorab-Anmeldung.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="index.html" class="brand" aria-label="artqrt Startseite" data-en-label="artqrt home"><img class="logo" src="assets/logo.svg" alt="artqrt" width="113" height="26"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation" data-en-label="Main navigation">
+      <a href="unternehmen.html" data-en="For companies">Für Unternehmen</a>
+      <a href="kuenstler.html" data-en="For artists">Für Künstler</a>
+      <a href="bibliothek.html" data-en="Library">Bibliothek</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="lang" id="lang" type="button">EN</button>
+      <a href="login.html" class="btn btn-quiet">Login</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="page-head" style="padding-bottom:32px">
+    <div class="wrap">
+      <p class="kicker" data-en="Account">Konto</p>
+      <h1 data-en="Your account">Dein Konto</h1>
+      <p class="lead" id="who"></p>
+      <div class="hero-cta"><button class="btn btn-quiet" type="button" id="logout" data-en="Log out">Abmelden</button></div>
+    </div>
+  </section>
+  <section class="section band" style="padding-top:clamp(40px,6vw,72px)">
+    <div class="wrap">
+      <p class="auth-msg" id="msg" role="status"></p>
+      <div id="artistArea" hidden>
+        <h2 data-en="Orders">Aufträge</h2>
+        <div id="orders"></div>
+        <h2 class="acct-h" data-en="Pre-registration">Vorab-Anmeldung</h2>
+        <div id="apps"></div>
+      </div>
+      <div id="companyArea" hidden>
+        <h2 data-en="Coming soon">Kommt bald</h2>
+        <p class="terms" data-en="The area for companies is being built. Until then, write to us at info@artqrt.de.">Der Bereich für Unternehmen wird gerade aufgebaut. Schreiben Sie uns bis dahin an info@artqrt.de.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div>
+      <img class="logo" src="assets/logo-dark.svg" alt="artqrt" width="105" height="24">
+      <div class="claim">Original art. New perspectives.</div>
+      <div class="about" data-en="artqrt rents original art by subscription to companies.">artqrt vermietet originale Kunst im Abo an Unternehmen.</div>
+      <div class="legalname">© <span id="yr"></span> artqrt · <span data-en="a service of mediarenner GbR">ein Angebot der mediarenner GbR</span></div>
+    </div>
+    <nav aria-label="Rechtliches und Kanäle" data-en-label="Legal and channels">
+      <a href="https://www.instagram.com/artqrt.official/" target="_blank" rel="noopener">Instagram</a>
+      <a href="impressum.html" data-en="Legal notice">Impressum</a>
+      <a href="datenschutz.html" data-en="Privacy">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+<script>
+/* Konto für Künstler: Aufträge mit ihren Phasen, Versandlabel, Verpackungsfotos und der Stand der Vorab-Anmeldung.
+   Jeder sieht nur die eigenen Daten, das regelt die Datenbank (Row Level Security). */
+const A = window.ARTQRT, T = A.T, auth = A.auth, esc = A.esc;
+const $ = id => document.getElementById(id), msg = $("msg");
+const MIN_PHOTOS = 2;
+const PHASES = [["created", T("Auftrag", "Order")], ["label_ready", T("Label erhalten", "Label received")], ["packed", T("Verpackt", "Packed")], ["shipped", T("Verschickt", "Shipped")], ["delivered", T("Angekommen", "Delivered")]];
+const STATUS = { pending: T("in Prüfung", "under review"), approved: T("freigegeben", "approved"), rejected: T("abgelehnt", "declined") };
+const say = (t, err) => { msg.textContent = t; msg.classList.toggle("is-err", !!err); };
+const day = v => v ? new Date(v).toLocaleDateString(T("de-DE", "en-GB"), { day: "numeric", month: "long", year: "numeric" }) : "";
+async function json(path, opts) {
+  const r = await auth.api(path, opts);
+  if (!r.ok) throw new Error(await r.text());
+  return r.status === 204 ? null : r.json();
+}
+const post = (path, body) => json(path, { method: "POST", headers: { "Content-Type": "application/json", Prefer: "return=minimal" }, body: JSON.stringify(body) });
+
+let me = null, works = [], ships = [];
+async function load() {
+  me = await json("/auth/v1/user");
+  const [profile] = await json("/rest/v1/profiles?select=role,name");
+  $("who").textContent = (profile && profile.name ? profile.name + ", " : "") + me.email;
+  if (profile && profile.role === "company") { $("companyArea").hidden = false; return; }
+  $("artistArea").hidden = false;
+  const artists = await json("/rest/v1/artists?select=id,status,created_at");
+  works = await json("/rest/v1/works?select=id,title,status,width_cm,height_cm&order=created_at");
+  ships = await json("/rest/v1/shipments?select=id,work_id,direction,status,carrier,tracking_code,label_path,note,created_at,shipped_at,delivered_at,shipment_photos(id)&order=created_at.desc");
+  renderOrders(); renderApps(artists);
+}
+
+function renderApps(artists) {
+  if (!artists.length) {
+    $("apps").innerHTML = `<p class="terms">${T("Unter deiner E-Mail-Adresse haben wir keine Vorab-Anmeldung gefunden.", "We couldn't find a pre-registration under your email address.")} <a href="kuenstler.html#anmelden">${T("Jetzt vorab anmelden", "Pre-register now")}</a></p>`;
+    return;
+  }
+  $("apps").innerHTML = `<p class="terms">${T("Eingegangen am", "Received on")} ${day(artists[0].created_at)}. ${T("Stand:", "Status:")} ${STATUS[artists[0].status] || ""}.</p>
+    <ul class="acct-list">${works.map(w => `<li><span>${esc(w.title)}, ${esc(w.width_cm)} × ${esc(w.height_cm)} cm</span><span class="muted small">${STATUS[w.status] || ""}</span></li>`).join("")}</ul>`;
+}
+
+function renderOrders() {
+  if (!ships.length) {
+    $("orders").innerHTML = `<p class="terms">${T("Noch keine Aufträge. Sobald ein Unternehmen eines deiner Werke auswählt, erscheint der Auftrag hier.", "No orders yet. As soon as a company chooses one of your works, the order appears here.")}</p>`;
+    return;
+  }
+  $("orders").innerHTML = ships.map(s => {
+    const work = works.find(w => w.id === s.work_id), at = PHASES.findIndex(p => p[0] === s.status), photos = (s.shipment_photos || []).length;
+    const steps = PHASES.map(([, label], i) => `<li class="${i < at ? "is-done" : i === at ? "is-now" : ""}"${i === at ? ' aria-current="step"' : ""}>${label}</li>`).join("");
+    let body = "", actions = "";
+    if (s.status === "created") body = T("Wir bereiten das Versandlabel vor. Du musst noch nichts tun.", "We're preparing the shipping label. Nothing for you to do yet.");
+    if (s.status === "label_ready" || s.status === "packed") {
+      body = T(`Lade das Label herunter, verpacke das Werk transportsicher und lade mindestens ${MIN_PHOTOS} Fotos der Verpackung hoch. Danach meldest du den Versand.`,
+               `Download the label, pack the work safely for transport and upload at least ${MIN_PHOTOS} photos of the packaging. Then report the shipment.`)
+           + ` ${photos} ${T(photos === 1 ? "Foto hochgeladen." : "Fotos hochgeladen.", photos === 1 ? "photo uploaded." : "photos uploaded.")}`;
+      actions = (s.label_path ? `<button class="btn btn-quiet" type="button" data-act="label" data-id="${s.id}">${T("Versandlabel herunterladen", "Download shipping label")}</button>` : "")
+        + `<label class="btn btn-quiet" for="ph-${s.id}">${T("Verpackungsfotos hochladen", "Upload packaging photos")}</label><input id="ph-${s.id}" type="file" accept="image/*" multiple data-act="upload" data-id="${s.id}">`
+        + `<button class="btn" type="button" data-act="ship" data-id="${s.id}"${photos < MIN_PHOTOS ? " disabled" : ""}>${T("Als verschickt melden", "Report as shipped")}</button>`;
+    }
+    if (s.status === "shipped") body = T("Verschickt am", "Shipped on") + ` ${day(s.shipped_at)}.` + (s.tracking_code ? ` ${T("Sendungsnummer", "Tracking number")}: ${esc(s.carrier || "")} ${esc(s.tracking_code)}.` : "") + " " + T("Wir melden uns hier, sobald das Werk angekommen ist.", "We'll let you know here as soon as the work has arrived.");
+    if (s.status === "delivered") body = (s.direction === "return" ? T("Wieder bei dir angekommen am", "Back with you on") : T("Beim Unternehmen angekommen am", "Arrived at the company on")) + ` ${day(s.delivered_at)}.`;
+    return `<article class="order">
+      <div class="order-head"><h3>${esc(work ? work.title : T("Werk", "Work"))}</h3><span class="small">${s.direction === "return" ? T("Rückversand zu dir", "Return to you") : T("Versand zum Unternehmen", "Shipment to the company")} · ${day(s.created_at)}</span></div>
+      <ol class="steps">${steps}</ol>
+      <p>${body}</p>${s.note ? `<p class="note">${esc(s.note)}</p>` : ""}
+      ${actions ? `<div class="order-actions">${actions}</div>` : ""}</article>`;
+  }).join("");
+}
+
+async function shrink(file) {
+  const bmp = await createImageBitmap(file), k = Math.min(1, 2000 / Math.max(bmp.width, bmp.height)), c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  return new Promise(r => c.toBlob(r, "image/jpeg", .85));
+}
+$("orders").addEventListener("click", async e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const s = ships.find(x => x.id === b.dataset.id); if (!s) return;
+  b.disabled = true; say("");
+  try {
+    if (b.dataset.act === "label") {
+      const r = await auth.api("/storage/v1/object/authenticated/labels/" + s.label_path.split("/").map(encodeURIComponent).join("/"));
+      if (!r.ok) throw new Error("label");
+      const a = document.createElement("a"); a.href = URL.createObjectURL(await r.blob()); a.download = "artqrt-versandlabel"; a.click();
+    }
+    if (b.dataset.act === "ship") {
+      if (!confirm(T("Ist das Paket abgegeben oder abgeholt worden?", "Has the parcel been dropped off or picked up?"))) return;
+      await post("/rest/v1/rpc/mark_shipped", { p_shipment: s.id });
+      await load(); say(T("Danke. Der Versand ist gemeldet.", "Thanks. The shipment is reported."));
+    }
+  } catch (err) { say(T("Das hat nicht geklappt. Versuch es bitte noch einmal.", "That didn't work. Please try again."), true); }
+  finally { b.disabled = false; }
+});
+$("orders").addEventListener("change", async e => {
+  const input = e.target.closest("input[data-act=upload]"); if (!input || !input.files.length) return;
+  const id = input.dataset.id, files = [...input.files].slice(0, 8); let done = 0;
+  say(T("Fotos werden hochgeladen …", "Uploading photos …"));
+  for (const f of files) {
+    try {
+      const blob = await shrink(f), path = `${me.id}/${id}/${crypto.randomUUID()}.jpg`;
+      const r = await auth.api("/storage/v1/object/packaging/" + path, { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: blob });
+      if (!r.ok) throw new Error("upload");
+      await post("/rest/v1/shipment_photos", { shipment_id: id, path });
+      done++;
+    } catch (err) {}
+  }
+  await load();
+  say(done === files.length ? T(`${done} Fotos gespeichert.`, `${done} photos saved.`) : T(`${done} von ${files.length} Fotos gespeichert. Die übrigen bitte noch einmal hochladen.`, `${done} of ${files.length} photos saved. Please upload the rest again.`), done !== files.length);
+});
+$("logout").addEventListener("click", async () => {
+  try { await auth.api("/auth/v1/logout", { method: "POST" }); } catch (e) {}
+  auth.clear(); location.replace("login.html");
+});
+
+if (!auth.get()) location.replace("login.html");
+else load().catch(err => {
+  if (err.message === "no-session") { auth.clear(); location.replace("login.html"); }
+  else say(T("Die Daten konnten nicht geladen werden. Lade die Seite bitte neu.", "The data couldn't be loaded. Please reload the page."), true);
+});
+</script>
+</body>
+</html>

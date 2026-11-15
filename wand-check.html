@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de" data-title-en="Wall check: try art on your own wall | artqrt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wand-Check: Kunst an der eigenen Wand testen | artqrt</title>
+<meta name="description" content="Der artqrt Wand-Check: ein Werk per Handykamera an die eigene Wand halten, ungefähr in Originalgröße. Kostenlos und ohne Anmeldung.">
+<link rel="canonical" href="https://www.artqrt.de/wand-check.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="artqrt">
+<meta property="og:locale" content="de_DE">
+<meta property="og:url" content="https://www.artqrt.de/wand-check.html">
+<meta property="og:title" content="Wand-Check: Kunst an der eigenen Wand testen | artqrt">
+<meta property="og:description" content="Der artqrt Wand-Check: ein Werk per Handykamera an die eigene Wand halten, ungefähr in Originalgröße. Kostenlos und ohne Anmeldung.">
+<meta property="og:image" content="https://www.artqrt.de/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="artqrt: originale Kunst im Abo für Unternehmen">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.artqrt.de/#org", "name": "artqrt", "legalName": "mediarenner GbR", "description": "artqrt vermietet originale Kunst im Abo an Unternehmen. Die Werke wechseln alle 6 Monate, Lieferung und Rückversand sind im Preis enthalten.", "url": "https://www.artqrt.de/", "logo": "https://www.artqrt.de/assets/logo.svg", "email": "info@artqrt.de", "telephone": "+49 176 47305606", "vatID": "DE364329565", "address": {"@type": "PostalAddress", "streetAddress": "Liskircherstraße 17", "postalCode": "93049", "addressLocality": "Regensburg", "addressCountry": "DE"}, "slogan": "Art that changes with your space.", "sameAs": ["https://www.instagram.com/artqrt.official/"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "artqrt", "item": "https://www.artqrt.de/"}, {"@type": "ListItem", "position": 2, "name": "Wand-Check", "item": "https://www.artqrt.de/wand-check.html"}]}]}</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#F6F1E7">
+<meta name="color-scheme" content="light">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js"></script>
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="index.html" class="brand" aria-label="artqrt Startseite" data-en-label="artqrt home"><img class="logo" src="assets/logo.svg" alt="artqrt" width="113" height="26"></a>
+    <nav class="nav-links" aria-label="Hauptnavigation" data-en-label="Main navigation">
+      <a href="unternehmen.html" data-en="For companies">Für Unternehmen</a>
+      <a href="kuenstler.html" data-en="For artists">Für Künstler</a>
+      <a href="bibliothek.html" data-en="Library">Bibliothek</a>
+    </nav>
+    <div class="nav-tools">
+      <button class="lang" id="lang" type="button">EN</button>
+      <a href="login.html" class="btn btn-quiet">Login</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <section class="page-head" style="padding-bottom:32px">
+    <div class="wrap">
+      <p class="kicker">Wand-Check</p>
+      <h1 data-en="How does the work look on your wall?">Wie wirkt das Werk an Ihrer Wand?</h1>
+      <p class="lead" data-en="Start the camera, point it at the wall, set the distance. The work appears at roughly its real size. The image stays on your device.">Kamera starten, auf die Wand halten, Abstand einstellen. Das Werk erscheint ungefähr in Originalgröße. Das Bild bleibt auf Ihrem Gerät.</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="wc" id="stage">
+        <video id="video" playsinline muted></video>
+        <img class="wc-bg" id="bg" alt="">
+        <div class="wc-art" id="art"><img id="artImg" alt=""></div>
+      </div>
+      <div class="wc-bar">
+        <p class="wc-note" id="workNote"></p>
+        <div class="wc-row">
+          <button class="btn" type="button" id="camBtn" data-en="Start camera">Kamera starten</button>
+          <label class="btn btn-quiet" for="photo" data-en="Choose a photo of the wall">Foto der Wand wählen</label><input id="photo" type="file" accept="image/*">
+          <button class="btn btn-quiet" type="button" id="shot" data-en="Save image">Bild speichern</button>
+        </div>
+        <div class="wc-range">
+          <label for="dist" data-en="Distance to the wall">Abstand zur Wand</label>
+          <input id="dist" type="range" min="100" max="500" step="10" value="250">
+          <output id="distOut"></output>
+        </div>
+        <p class="wc-note" id="msg" role="status" data-en="Drag the work with your finger. The size is roughly right when the distance matches.">Das Werk lässt sich mit dem Finger verschieben. Die Größe stimmt ungefähr, wenn der Abstand passt.</p>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap">
+    <div>
+      <img class="logo" src="assets/logo-dark.svg" alt="artqrt" width="105" height="24">
+      <div class="claim">Original art. New perspectives.</div>
+      <div class="about" data-en="artqrt rents original art by subscription to companies.">artqrt vermietet originale Kunst im Abo an Unternehmen.</div>
+      <div class="legalname">© <span id="yr"></span> artqrt · <span data-en="a service of mediarenner GbR">ein Angebot der mediarenner GbR</span></div>
+    </div>
+    <nav aria-label="Rechtliches und Kanäle" data-en-label="Legal and channels">
+      <a href="https://www.instagram.com/artqrt.official/" target="_blank" rel="noopener">Instagram</a>
+      <a href="impressum.html" data-en="Legal notice">Impressum</a>
+      <a href="datenschutz.html" data-en="Privacy">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+<script>
+const A = window.ARTQRT, T = A.T, q = new URLSearchParams(location.search);
+const SAMPLE = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="800" height="1000"><rect width="400" height="500" fill="#EAE2D3"/><path d="M40 60H200A160 160 0 0 1 40 220Z" fill="#1C2522"/><path d="M360 220H200A160 160 0 0 1 360 60Z" fill="#8DA287"/><path d="M40 440V280A160 160 0 0 1 200 440Z" fill="#545C57"/><path d="M200 280A160 160 0 0 1 360 440H200Z" fill="#D3C4A8"/></svg>');
+const fromLib = /^https:\/\//.test(q.get("img") || "");
+const work = fromLib
+  ? { img: q.get("img"), w: Math.min(600, Math.max(5, parseFloat(q.get("w")) || 80)), h: Math.min(600, Math.max(5, parseFloat(q.get("h")) || 100)), title: q.get("title") || "" }
+  : { img: SAMPLE, w: 80, h: 100, title: T("Beispielwerk, generiert", "Sample work, generated") };
+
+const FOV = 65 * Math.PI / 180;   // Annahme: Bildwinkel der Hauptkamera entlang der langen Bildseite
+const stage = document.getElementById("stage"), video = document.getElementById("video"), bg = document.getElementById("bg");
+const art = document.getElementById("art"), artImg = document.getElementById("artImg"), dist = document.getElementById("dist"), msg = document.getElementById("msg");
+let mode = "none", stream = null;
+if (fromLib) artImg.crossOrigin = "anonymous";
+artImg.src = work.img;
+document.getElementById("workNote").textContent = `${work.title}${work.title ? ", " : ""}${work.w} × ${work.h} cm`;
+
+function source() {
+  if (mode === "cam") return { el: video, w: video.videoWidth, h: video.videoHeight };
+  if (mode === "photo") return { el: bg, w: bg.naturalWidth, h: bg.naturalHeight };
+  return { el: null, w: stage.clientWidth, h: stage.clientHeight };
+}
+function layout() {
+  const s = source(); if (!s.w || !s.h) return;
+  const scale = Math.max(stage.clientWidth / s.w, stage.clientHeight / s.h);
+  const pxPerCm = Math.max(s.w, s.h) * scale / (2 * dist.value * Math.tan(FOV / 2));
+  art.style.width = work.w * pxPerCm + "px"; art.style.height = work.h * pxPerCm + "px";
+  document.getElementById("distOut").textContent = (dist.value / 100).toLocaleString(T("de-DE", "en-GB"), { minimumFractionDigits: 1 }) + " m";
+}
+dist.addEventListener("input", layout); addEventListener("resize", layout); layout();
+
+function setMode(m) { mode = m; stage.classList.toggle("is-cam", m === "cam"); stage.classList.toggle("is-photo", m === "photo"); layout(); }
+function stopCam() { if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; } }
+document.getElementById("camBtn").addEventListener("click", async () => {
+  try {
+    stopCam();
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+    video.srcObject = stream; await video.play(); setMode("cam");
+    msg.textContent = T("Stellen Sie den Abstand zur Wand ein. Das Werk lässt sich mit dem Finger verschieben.", "Set the distance to the wall. Drag the work with your finger.");
+  } catch (e) {
+    msg.textContent = T("Die Kamera lässt sich nicht öffnen. Erlauben Sie den Zugriff im Browser oder wählen Sie ein Foto der Wand.", "The camera can't be opened. Allow access in your browser or choose a photo of the wall.");
+  }
+});
+document.getElementById("photo").addEventListener("change", e => {
+  const f = e.target.files[0]; if (!f) return;
+  stopCam(); bg.onload = () => setMode("photo"); bg.src = URL.createObjectURL(f);
+});
+addEventListener("pagehide", stopCam);
+
+/* Werk verschieben */
+let drag = null;
+art.addEventListener("pointerdown", e => { const r = art.getBoundingClientRect(), b = stage.getBoundingClientRect(); drag = { dx: e.clientX - (r.left + r.width / 2), dy: e.clientY - (r.top + r.height / 2), b }; art.setPointerCapture(e.pointerId); });
+art.addEventListener("pointermove", e => { if (!drag) return; art.style.left = (e.clientX - drag.dx - drag.b.left) + "px"; art.style.top = (e.clientY - drag.dy - drag.b.top) + "px"; });
+["pointerup", "pointercancel"].forEach(ev => art.addEventListener(ev, () => { drag = null; }));
+
+/* Bild aus Hintergrund und Werk zusammensetzen und lokal speichern */
+document.getElementById("shot").addEventListener("click", () => {
+  const W = stage.clientWidth, H = stage.clientHeight, k = 2, c = document.createElement("canvas");
+  c.width = W * k; c.height = H * k; const ctx = c.getContext("2d"); ctx.scale(k, k);
+  ctx.fillStyle = "#E2D9C8"; ctx.fillRect(0, 0, W, H);
+  const s = source();
+  if (s.el) { const sc = Math.max(W / s.w, H / s.h); ctx.drawImage(s.el, (W - s.w * sc) / 2, (H - s.h * sc) / 2, s.w * sc, s.h * sc); }
+  const r = art.getBoundingClientRect(), b = stage.getBoundingClientRect();
+  ctx.shadowColor = "rgba(20,15,10,.45)"; ctx.shadowBlur = 28; ctx.shadowOffsetY = 14;
+  ctx.drawImage(artImg, r.left - b.left, r.top - b.top, r.width, r.height);
+  try {
+    c.toBlob(blob => {
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "artqrt-wand-check.jpg"; a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      msg.textContent = T("Das Bild wurde auf Ihrem Gerät gespeichert.", "The image was saved on your device.");
+    }, "image/jpeg", 0.9);
+  } catch (e) {
+    msg.textContent = T("Das Bild lässt sich hier nicht speichern. Ein Screenshot funktioniert immer.", "The image can't be saved here. A screenshot always works.");
+  }
+});
+</script>
+</body>
+</html>

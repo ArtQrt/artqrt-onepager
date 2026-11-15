@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bibliothek: originale Kunst zum Mieten | artqrt</title>
-<meta name="description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief zu Größe, Stil und Material.">
+<meta name="description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief und Wand-Check.">
 <link rel="canonical" href="https://www.artqrt.de/bibliothek.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="artqrt">
 <meta property="og:locale" content="de_DE">
 <meta property="og:url" content="https://www.artqrt.de/bibliothek.html">
 <meta property="og:title" content="Bibliothek: originale Kunst zum Mieten | artqrt">
-<meta property="og:description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief zu Größe, Stil und Material.">
+<meta property="og:description" content="Die artqrt-Bibliothek: Originale von Künstlerinnen und Künstlern zum Mieten, jedes Werk mit Steckbrief und Wand-Check.">
 <meta property="og:image" content="https://www.artqrt.de/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="artqrt: originale Kunst im Abo für Unternehmen">
 <meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.artqrt.de/#org", "name": "artqrt", "legalName": "mediarenner GbR", "description": "artqrt vermietet originale Kunst im Abo an Unternehmen. Die Werke wechseln alle 6 Monate, Versand und Versicherung sind im Preis enthalten.", "url": "https://www.artqrt.de/", "logo": "https://www.artqrt.de/assets/logo.svg", "email": "info@artqrt.de", "telephone": "+49 176 47305606", "vatID": "DE364329565", "address": {"@type": "PostalAddress", "streetAddress": "Liskircherstraße 17", "postalCode": "93049", "addressLocality": "Regensburg", "addressCountry": "DE"}, "slogan": "Art that changes with your space.", "sameAs": ["https://www.instagram.com/artqrt.official/"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "artqrt", "item": "https://www.artqrt.de/"}, {"@type": "ListItem", "position": 2, "name": "Bibliothek", "item": "https://www.artqrt.de/bibliothek.html"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://www.artqrt.de/#org", "name": "artqrt", "legalName": "mediarenner GbR", "description": "artqrt vermietet originale Kunst im Abo an Unternehmen. Die Werke wechseln alle 6 Monate, Lieferung und Rückversand sind im Preis enthalten.", "url": "https://www.artqrt.de/", "logo": "https://www.artqrt.de/assets/logo.svg", "email": "info@artqrt.de", "telephone": "+49 176 47305606", "vatID": "DE364329565", "address": {"@type": "PostalAddress", "streetAddress": "Liskircherstraße 17", "postalCode": "93049", "addressLocality": "Regensburg", "addressCountry": "DE"}, "slogan": "Art that changes with your space.", "sameAs": ["https://www.instagram.com/artqrt.official/"]}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "artqrt", "item": "https://www.artqrt.de/"}, {"@type": "ListItem", "position": 2, "name": "Bibliothek", "item": "https://www.artqrt.de/bibliothek.html"}]}]}</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#F6F1E7">
 <meta name="color-scheme" content="light">
@@ -29,12 +29,13 @@
   <div class="wrap nav-in">
     <a href="index.html" class="brand" aria-label="artqrt Startseite" data-en-label="artqrt home"><img class="logo" src="assets/logo.svg" alt="artqrt" width="113" height="26"></a>
     <nav class="nav-links" aria-label="Hauptnavigation" data-en-label="Main navigation">
-      <a href="index.html#anmelden" data-en="For artists">Für Künstler</a>
-      <a href="bibliothek.html" data-en="Works">Werke</a>
-      <a href="index.html#unternehmen" data-en="For companies">Für Unternehmen</a>
+      <a href="unternehmen.html" data-en="For companies">Für Unternehmen</a>
+      <a href="kuenstler.html" data-en="For artists">Für Künstler</a>
+      <a href="bibliothek.html" data-en="Library">Bibliothek</a>
     </nav>
     <div class="nav-tools">
       <button class="lang" id="lang" type="button">EN</button>
+      <a href="login.html" class="btn btn-quiet">Login</a>
     </div>
   </div>
 </header>
@@ -44,16 +45,21 @@
     <div class="wrap">
       <p class="kicker" data-en="Library">Bibliothek</p>
       <h1 data-en="Artists and their works.">Künstler und ihre Werke.</h1>
-      <p class="lead" data-en="Every work is an original and has a fact sheet with size, style and material.">Jedes Werk ist ein Original und hat einen Steckbrief mit Größe, Stil und Material.</p>
+      <p class="lead" data-en="Every work has a fact sheet with size, style and material. With the wall check you see it on your own wall.">Jedes Werk hat einen Steckbrief mit Größe, Stil und Material. Mit dem Wand-Check sehen Sie es an der eigenen Wand.</p>
     </div>
   </section>
   <section class="section" style="padding-top:0" aria-live="polite">
     <div class="wrap">
+      <div class="lib-filter" id="filter" hidden>
+        <label><span data-en="Price tier">Preisstufe</span><select id="fTier"><option value="" data-en="All">Alle</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></label>
+        <label><span data-en="Format">Format</span><select id="fFormat"><option value="" data-en="All">Alle</option><option value="hoch" data-en="Portrait">Hochformat</option><option value="quer" data-en="Landscape">Querformat</option><option value="quadrat" data-en="Square">Quadratisch</option></select></label>
+        <span class="small muted" id="fCount"></span>
+      </div>
       <div class="lib" id="lib"></div>
       <div class="empty" id="empty" hidden>
         <h2 data-en="The first works are coming soon.">Die ersten Werke kommen bald.</h2>
         <p data-en="We are looking through the first pre-registrations. As soon as artists are approved, their works appear here.">Wir sichten gerade die ersten Vorab-Anmeldungen. Sobald Künstlerinnen und Künstler freigegeben sind, erscheinen ihre Werke hier.</p>
-        <a class="btn" href="index.html#anmelden" data-en="Pre-register as an artist">Als Künstler vorab anmelden</a>
+        <a class="btn" href="kuenstler.html" data-en="Pre-register as an artist">Als Künstler vorab anmelden</a>
       </div>
     </div>
   </section>
@@ -85,16 +91,32 @@ async function loadWorks() {
   return r.json();
 }
 function card(w) {
-  const rows = [[T("Größe", "Size"), `${esc(w.width_cm)} × ${esc(w.height_cm)} cm`], [T("Stil", "Style"), esc(w.style)], [T("Material", "Material"), esc(w.material)], [T("Jahr", "Year"), esc(w.year)]];
+  const rows = [[T("Größe", "Size"), w.width_cm && w.height_cm ? `${esc(w.width_cm)} × ${esc(w.height_cm)} cm` : ""], [T("Technik", "Medium"), esc(w.material)], [T("Stil", "Style"), esc(w.style)], [T("Jahr", "Year"), esc(w.year)]];
+  const price = w.tier ? `${T("Stufe", "Tier")} ${esc(w.tier)} · ${w.rent ? `${A.money(w.rent)} ${T("Werkmiete netto pro Monat", "rent net per month")}` : T("Werkmiete auf Anfrage", "rent on request")}` : "";
+  const q = new URLSearchParams({ img: w.image_url, w: w.width_cm, h: w.height_cm, title: w.title });
   return `<article class="lib-card">
-    <div class="pic"><img src="${esc(w.image_url)}" alt="${esc(w.title)}" loading="lazy"></div>
-    <div class="brief"><div class="brief-head"><span class="t">${esc(w.title)}</span><span class="tag">Original</span></div><div class="a">${esc(w.artist)}</div>
-      <dl>${rows.filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl></div>
-  </article>`;
+    <div class="pic"><img src="${esc(w.image_url)}" alt="${esc(w.title)}, ${esc(w.artist)}" loading="lazy"></div>
+    <div class="brief"><div class="brief-head"><span class="t">${esc(w.title)}</span><span class="tag">Original</span></div><div class="a">${esc(w.artist)}${w.city ? `, ${esc(w.city)}` : ""}</div>
+      ${w.description ? `<p class="desc">${esc(w.description)}</p>` : ""}
+      <dl>${rows.filter(r => r[1]).map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("")}</dl>
+      ${price ? `<div class="fee">${price}</div>` : ""}</div>
+    ${w.freight ? `<div class="fee">${T("Versand per Kunstspedition", "Shipped by art shipper")}: + ${A.money(C.freightSurcharge)} ${T("netto pro Monat", "net per month")}</div>` : ""}
+    <a class="btn btn-quiet" href="wand-check.html?${q}">${T("An meiner Wand ansehen", "See it on my wall")}</a>
+    <a class="link" href="unternehmen.html#anfrage">${T("Anfragen", "Ask about it")}</a></article>`;
+}
+const format = w => { const r = (+w.width_cm || 0) / (+w.height_cm || 1); return !w.width_cm || !w.height_cm ? "" : r > 1.1 ? "quer" : r < 0.9 ? "hoch" : "quadrat"; };
+let all = [];
+function show() {
+  const t = document.getElementById("fTier").value, f = document.getElementById("fFormat").value;
+  const list = all.filter(w => (!t || w.tier === t) && (!f || format(w) === f));
+  document.getElementById("lib").innerHTML = list.map(card).join("");
+  document.getElementById("fCount").textContent = T(`${list.length} von ${all.length} Werken`, `${list.length} of ${all.length} works`);
 }
 loadWorks().catch(() => []).then(list => {
   if (!list.length) { document.getElementById("empty").hidden = false; return; }
-  document.getElementById("lib").innerHTML = list.map(card).join("");
+  all = list; document.getElementById("filter").hidden = false;
+  document.getElementById("fTier").addEventListener("change", show); document.getElementById("fFormat").addEventListener("change", show);
+  show();
 });
 </script>
 </body>
