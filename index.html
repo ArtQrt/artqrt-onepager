@@ -511,6 +511,20 @@ async function shrink(file){
     return blob?new File([blob],file.name.replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"}):file;
   }catch(e){return file}
 }
+// Herkunft der Anmeldung: ?ref=… aus dem Link (z. B. ?ref=kunstaspekte), sonst die verweisende Seite als "via:domain".
+// Nichts wird im Browser gespeichert (kein Cookie, kein localStorage); der Wert geht nur mit der Anmeldung mit.
+function artqrtQuelle(){
+  const ok=v=>/^(via:)?[a-z0-9._-]{1,56}$/.test(v);
+  let q="";
+  try{ const p=new URLSearchParams(location.search); q=(p.get("ref")||p.get("utm_source")||"").trim().toLowerCase(); }catch(e){}
+  if(!ok(q)){
+    q="";
+    try{ const h=document.referrer?new URL(document.referrer).hostname.replace(/^www\./,""):""; if(h&&!/(^|\.)artqrt\.(de|com)$/.test(h)) q="via:"+h; }catch(e){}
+  }
+  return ok(q)?q:"";
+}
+const ARTQRT_QUELLE=artqrtQuelle();
+
 async function buildFormData(){
   const fd=new FormData();
   textIds.forEach(id=>fd.append(id,document.getElementById(id).value.trim()));
@@ -523,6 +537,7 @@ async function buildFormData(){
   }
   fd.append("consent_shipping","true"); fd.append("consent_rights","true"); fd.append("consent_privacy","true");
   fd.append("lang",window.ARTQRT.lang); fd.append("company_website",document.getElementById("hp").value);
+  if(ARTQRT_QUELLE) fd.append("quelle",ARTQRT_QUELLE);
   return fd;
 }
 async function submitApplication(fd){
@@ -579,6 +594,7 @@ document.getElementById("again").onclick=()=>{
     if(!document.getElementById("coPrivacy").checked)mark(document.getElementById("coPrivacyField"));
     if(first){first.scrollIntoView({behavior:"smooth",block:"center"}); return}
     const fd=new FormData(f); fd.append("consent_privacy","true"); fd.append("lang",window.ARTQRT.lang);
+    if(typeof ARTQRT_QUELLE==="string"&&ARTQRT_QUELLE) fd.append("quelle",ARTQRT_QUELLE);
     b.disabled=true;
     try{
       if(B.url){
