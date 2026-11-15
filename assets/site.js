@@ -17,14 +17,15 @@
     vat: 19,                                     // MwSt. in %
     packages: [                                  // service = Servicepauschale netto/Monat (Platzhalter)
       { id: "essential", name: "Essential", service: 149, works: 3, curation: false },
-      { id: "studio", name: "Studio", service: 199, works: 5, curation: false },
-      { id: "signature", name: "Signature", service: 299, works: 8, curation: true }
+      { id: "studio", name: "Studio", service: 229, works: 5, curation: false },
+      { id: "signature", name: "Signature", service: 349, works: 8, curation: true }
     ],
     tiers: [                                     // Werkmiete netto/Monat nach Verkaufspreis (Platzhalter), darueber Einzelpreis
-      { id: "A", upTo: 2500, rent: 75 },
-      { id: "B", upTo: 5000, rent: 150 },
-      { id: "C", upTo: 10000, rent: 250 }
+      { id: "A", upTo: 2500, rent: 95 },
+      { id: "B", upTo: 5000, rent: 160 },
+      { id: "C", upTo: 10000, rent: 260 }
     ],
+    tierD: { pct: 2.5, minRent: 300 },          // ueber 10.000 €: 2,5 % des Verkaufspreises pro Monat, mindestens 300 € (Platzhalter, entschieden 15.11.2026)
     artistShare: 50,                             // Kuenstleranteil in % der Werkmiete (entschieden)
     swapMonths: 6,                               // Werkwechsel, fuer alle Pakete gleich
     minTermMonths: 12, renewMonths: 6, noticeWeeks: 4,

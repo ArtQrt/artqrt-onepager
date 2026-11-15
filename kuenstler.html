@@ -266,7 +266,8 @@ document.querySelectorAll("[data-brand]").forEach(e=>e.textContent=BRAND.name);
   const list = (f, and) => { const x = tiers.map(f); return x.slice(0, -1).join(", ") + and + x[x.length - 1]; };
   const de = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "bei einem Verkaufspreis "}bis ${lim(t.upTo)}`, " und ");
   const en = list((t, i) => `${G.money(t.rent * sh / 100)} ${i ? "" : "for a sale price "}up to ${lim(t.upTo)}`, " and ");
-  document.getElementById("faqPay").textContent = T(`Du erhältst ${sh} % der Miete für dein Werk, jeden Monat. Wie hoch die Miete ist, hängt vom Verkaufspreis ab, den du festlegst. Pro Werk und Monat sind das ${de}. Bei teureren Werken vereinbaren wir den Betrag einzeln. Möchte ein Unternehmen ein Werk kaufen, gilt dein Verkaufspreis.`,`You receive ${sh}% of the rent for your work, every month. The rent depends on the sale price you set. Per work and month that is ${en}. For more expensive works we agree the amount individually. If a company wants to buy a work, your sale price applies.`); }
+  const dPct = G.CONFIG.tierD.pct * sh / 100, dMin = G.CONFIG.tierD.minRent * sh / 100, top = lim(tiers[tiers.length-1].upTo);
+  document.getElementById("faqPay").textContent = T(`Du bekommst jeden Monat eine Vergütung für dein Werk, solange es hängt. Wie hoch sie ist, hängt vom Verkaufspreis ab, den du festlegst. Pro Werk und Monat sind das ${de}. Bei Werken über ${top} sind es ${String(dPct).replace(".", ",")} % des Verkaufspreises im Monat, mindestens ${G.money(dMin)}. Möchte ein Unternehmen ein Werk kaufen, gilt dein Verkaufspreis.`,`You get a monthly payment for your work for as long as it hangs. The amount depends on the sale price you set. Per work and month that is ${en}. For works over ${top} it is ${dPct}% of the sale price per month, at least ${G.money(dMin)}. If a company wants to buy a work, your sale price applies.`); }
 
 
 /* ===== Styles chips ===== */
